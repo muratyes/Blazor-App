@@ -1,0 +1,30 @@
+﻿@page "/stats"
+@using BlazorTodoApp.Client.Services
+@inject TaskService TaskService
+
+<h3 class="mb-4">📊 Tasks Statistics</h3>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card text-bg-success mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Completed Tasks</h5>
+                <p class="card-text display-6">@CompletedCount</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card text-bg-danger mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Incomplate Tasks</h5>
+                <p class="card-text display-6">@IncompleteCount</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private int CompletedCount => TaskService.Tasks.Count(t => t.IsCompleted);
+    private int IncompleteCount => TaskService.Tasks.Count(t => !t.IsCompleted);
+}

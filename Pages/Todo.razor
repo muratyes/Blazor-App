@@ -1,0 +1,42 @@
+﻿@page "/todo"
+@using BlazorTodoApp.Client.Services
+@using BlazorTodoApp.Model
+@inject TaskService TaskService
+
+<h3 class="mb-4">📋 Tasks List</h3>
+
+<div class="input-group mb-3">
+    <input class="form-control" @bind="newTaskTitle" placeholder="New Task Add..." />
+    <button class="btn btn-success" @onclick="AddTask">ADD</button>
+</div>
+
+<ul class="list-group">
+    @foreach (var task in TaskService.Tasks)
+    {
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <input type="checkbox" class="form-check-input me-2" @bind="task.IsCompleted" />
+                <span class="@GetTaskTextClass(task.IsCompleted)">@task.Title</span>
+            </div>
+            <button class="btn btn-sm btn-outline-danger" @onclick="() => TaskService.RemoveTask(task)">Delete</button>
+        </li>
+    }
+</ul>
+
+@code {
+    private string newTaskTitle = string.Empty;
+
+    private async Task AddTask()
+    {
+        if (!string.IsNullOrWhiteSpace(newTaskTitle))
+        {
+            await TaskService.AddTask(newTaskTitle);
+            newTaskTitle = string.Empty;
+        }
+    }
+
+    private string GetTaskTextClass(bool isCompleted)
+    {
+        return isCompleted ? "text-decoration-line-through text-muted" : "";
+    }
+}
